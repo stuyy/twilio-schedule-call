@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { WebhooksModule } from './webhooks/webhooks.module';
 import { CallsModule } from './calls/calls.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { entities } from './typeorm';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: process.env.MYSQL_DB_USERNAME,
       password: process.env.MYSQL_DB_PASSWORD,
       database: process.env.MYSQL_DB_DATABASE,
-      entities: [],
+      entities: entities,
       synchronize: true,
     }),
     WebhooksModule,
