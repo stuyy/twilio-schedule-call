@@ -1,5 +1,6 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { SERVICES } from '../../utils/constants';
+import { ScheduleCallDto } from '../dto/ScheduleCallDto';
 import { ICallsService } from '../interfaces/CallsService';
 
 @Controller('calls')
@@ -11,5 +12,10 @@ export class CallsController {
   @Get()
   getCall() {
     return this.callsService.getCall();
+  }
+
+  @Post()
+  scheduleCall(@Body() scheduleCallDto: ScheduleCallDto) {
+    return this.callsService.scheduleCall(scheduleCallDto);
   }
 }

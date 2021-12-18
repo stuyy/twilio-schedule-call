@@ -1,5 +1,7 @@
+import { ScheduleCallDto } from '../dto/ScheduleCallDto';
+
 export interface ICallsService {
-  scheduleCall();
+  scheduleCall(scheduleCallDto: ScheduleCallDto);
   getCall();
   updateCall();
   cancelCall();
