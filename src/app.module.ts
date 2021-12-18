@@ -4,6 +4,7 @@ import { WebhooksModule } from './webhooks/webhooks.module';
 import { CallsModule } from './calls/calls.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { entities } from './typeorm';
+import { TwilioModule } from './twilio/twilio.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { entities } from './typeorm';
     }),
     WebhooksModule,
     CallsModule,
+    TwilioModule,
   ],
   controllers: [],
   providers: [],
