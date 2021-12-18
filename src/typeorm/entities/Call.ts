@@ -17,6 +17,6 @@ export class Call {
   @Column({ name: 'scheduled_date' })
   scheduledDate: Date;
 
-  @Column()
+  @Column({ default: 'scheduled' })
   status: string;
 }
