@@ -1,14 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Call } from '../../typeorm/entities/Call';
-import { ScheduleCallDto } from '../dto/ScheduleCallDto';
-import { ICallsService } from '../interfaces/CallsService';
+import { ITwilioService } from '../twilio/twilio.inteface';
+import { Call } from '../typeorm/entities/Call';
+import { SERVICES } from '../utils/constants';
+import { ScheduleCallDto } from './call.dto';
+import { ICallsService } from './calls.interface';
 
 @Injectable()
 export class CallsService implements ICallsService {
   constructor(
     @InjectRepository(Call) private readonly callRepository: Repository<Call>,
+    @Inject(SERVICES.TWILIO_SERVICE)
+    private readonly twilioService: ITwilioService,
   ) {}
 
   scheduleCall(scheduleCallDto: ScheduleCallDto) {
@@ -23,5 +27,8 @@ export class CallsService implements ICallsService {
   }
   cancelCall() {
     throw new Error('Method not implemented.');
+  }
+  startCall(call: Call) {
+    this.twilioService.startCall(call);
   }
 }

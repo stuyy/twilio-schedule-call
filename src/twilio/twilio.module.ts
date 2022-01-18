@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
+import { Twilio } from 'twilio';
 import { ConfigModule } from '@nestjs/config';
 import { SERVICES } from '../utils/constants';
-import { TwilioService } from './services/twilio.service';
-import { Twilio } from 'twilio';
-
+import { TwilioService } from './twilio.service';
+// import VoiceResponse from 'twilio/lib/twiml/VoiceResponse';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,6 +21,16 @@ import { Twilio } from 'twilio';
         process.env.TWILIO_ACCOUNT_SID,
         process.env.TWILIO_AUTH_TOKEN,
       ),
+    },
+    // {
+    //   provide: 'VOICE_RESPONSE',
+    //   useClass: VoiceResponse,
+    // },
+  ],
+  exports: [
+    {
+      provide: SERVICES.TWILIO_SERVICE,
+      useClass: TwilioService,
     },
   ],
 })
