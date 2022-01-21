@@ -3,5 +3,6 @@ import { Call } from '../typeorm/entities/Call';
 
 export interface ITwilioService {
   startCall(call: Call);
+  createVerifyService(to: string);
   // getVoiceResponse(): VoiceResponse;
 }

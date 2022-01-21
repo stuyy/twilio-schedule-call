@@ -26,4 +26,11 @@ export class TwilioService implements ITwilioService {
       .then((v) => console.log(v))
       .catch((err) => console.log(err));
   }
+
+  createVerifyService(to: string) {
+    const channel = 'sms';
+    return this.twilioClient.verify
+      .services(process.env.TWILIO_SERVICE_SID)
+      .verifications.create({ to, channel });
+  }
 }

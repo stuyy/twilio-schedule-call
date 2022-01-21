@@ -8,6 +8,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PassportModule } from '@nestjs/passport';
+import { VerifyModule } from './verify/verify.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { PassportModule } from '@nestjs/passport';
     AuthModule,
     UserModule,
     PassportModule.register({ session: true }),
+    VerifyModule,
   ],
   controllers: [],
   providers: [],

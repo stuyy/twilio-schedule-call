@@ -13,4 +13,5 @@ export enum ROUTES {
   CALLS = 'calls',
   USER = 'users',
   WEBHOOKS = 'webhooks',
+  VERIFY = 'verify',
 }
