@@ -11,5 +11,6 @@ export enum SERVICES {
 export enum ROUTES {
   AUTH = 'auth',
   CALLS = 'calls',
+  USER = 'users',
   WEBHOOKS = 'webhooks',
 }
