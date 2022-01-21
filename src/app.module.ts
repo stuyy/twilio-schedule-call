@@ -7,6 +7,7 @@ import { TwilioModule } from './twilio/twilio.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UserModule } from './user/user.module';
     TwilioModule,
     AuthModule,
     UserModule,
+    PassportModule.register({ session: true }),
   ],
   controllers: [],
   providers: [],
