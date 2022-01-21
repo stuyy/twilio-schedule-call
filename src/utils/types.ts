@@ -11,6 +11,15 @@ export type FindUserParams = Partial<{
   mobile: string;
 }>;
 
+export type UpdateUserParams = Partial<{
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  mobile: string;
+  verified: boolean;
+}>;
+
 export type VerifyCodeResponse = {
   sid: string;
   serviceSid: string;
@@ -23,4 +32,10 @@ export type VerifyCodeResponse = {
   payee?: any;
   dateCreated: Date;
   dateUpdated: Date;
+};
+
+export type VerifyPhoneParams = {
+  userId: number;
+  mobile: string;
+  code: string;
 };
