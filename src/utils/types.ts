@@ -10,3 +10,17 @@ export type FindUserParams = Partial<{
   email: string;
   mobile: string;
 }>;
+
+export type VerifyCodeResponse = {
+  sid: string;
+  serviceSid: string;
+  accountSid: string;
+  to: string;
+  channel: string;
+  status: string;
+  valid: boolean;
+  amount?: number;
+  payee?: any;
+  dateCreated: Date;
+  dateUpdated: Date;
+};
