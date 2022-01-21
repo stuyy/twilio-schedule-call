@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { entities } from './typeorm';
 import { TwilioModule } from './twilio/twilio.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     CallsModule,
     TwilioModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],
