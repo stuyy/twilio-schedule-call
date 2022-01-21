@@ -10,11 +10,10 @@ export class TwilioService implements ITwilioService {
     @Inject(SERVICES.TWILIO_CLIENT) private readonly twilioClient: Twilio,
   ) {}
   startCall(call: Call) {
-    this.twilioClient.calls
-      .create({
-        to: call.caller,
-        from: process.env.TWILIO_PHONE_NUMBER,
-        twiml: `
+    return this.twilioClient.calls.create({
+      to: call.caller,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      twiml: `
         <Response>
           <Pause length="2" />
           <Say>${call.description}</Say>
@@ -22,9 +21,7 @@ export class TwilioService implements ITwilioService {
             <Say>Please enter 1 to call, or 2 to end.</Say>
           </Gather>
         </Response>`,
-      })
-      .then((v) => console.log(v))
-      .catch((err) => console.log(err));
+    });
   }
 
   createVerifyService(to: string) {

@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { ITwilioService } from '../twilio/twilio.inteface';
 import { Call } from '../typeorm/entities/Call';
 import { SERVICES } from '../utils/constants';
-import { ScheduleCallDto } from './call.dto';
+import { ScheduleCallDto } from './calls.dto';
 import { ICallsService } from './calls.interface';
 
 @Injectable()
@@ -19,6 +19,7 @@ export class CallsService implements ICallsService {
     const call = this.callRepository.create(scheduleCallDto);
     return this.callRepository.save(call);
   }
+
   getCall() {
     throw new Error('Method not implemented.');
   }
@@ -29,6 +30,6 @@ export class CallsService implements ICallsService {
     throw new Error('Method not implemented.');
   }
   startCall(call: Call) {
-    this.twilioService.startCall(call);
+    return this.twilioService.startCall(call);
   }
 }

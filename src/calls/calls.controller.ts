@@ -7,16 +7,19 @@ import {
   Inject,
   Post,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { ITwilioService } from '../twilio/twilio.inteface';
 import { SERVICES } from '../utils/constants';
-import { ScheduleCallDto } from './call.dto';
+import { ScheduleCallDto } from './calls.dto';
 import { ICallsService } from './calls.interface';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
+import { AuthenticatedGuard } from '../auth/utils/Guards';
 
+@UseGuards(AuthenticatedGuard)
 @Controller('calls')
 export class CallsController {
   constructor(
@@ -27,7 +30,7 @@ export class CallsController {
   ) {}
 
   @Get()
-  getCall() {
+  getCalls() {
     return this.callsService.getCall();
   }
 
@@ -35,10 +38,17 @@ export class CallsController {
   @UsePipes(ValidationPipe)
   async scheduleCall(@Body() scheduleCallDto: ScheduleCallDto) {
     const call = await this.callsService.scheduleCall(scheduleCallDto);
-    const job = new CronJob(new Date(call.scheduledDate), () =>
-      this.callsService.startCall(call),
+    const job = new CronJob(new Date(call.scheduledDate), async () =>
+      this.callsService
+        .startCall(call)
+        .then((call) => {
+          console.log(call);
+          console.log(`Call Successful`);
+        })
+        .catch((err) => console.log(err)),
     );
-    this.schedulerRegistry.addCronJob(`Job ${call.id}`, job);
+    this.schedulerRegistry.addCronJob(call.id.toString(), job);
+    console.log(this.schedulerRegistry.getCronJobs());
     job.start();
   }
 
