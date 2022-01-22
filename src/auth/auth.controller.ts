@@ -4,17 +4,20 @@ import {
   Get,
   Inject,
   Post,
+  Req,
+  Res,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { instanceToPlain } from 'class-transformer';
+import { Request, Response } from 'express';
 import { User } from '../typeorm/entities/User';
 import { IUserService } from '../user/user.interface';
 import { ROUTES, SERVICES } from '../utils/constants';
 import { AuthUser } from '../utils/decorators';
 import { CreateUserDto } from './dtos/CreateUser.dto';
 import { ValidatePasswordPipe } from './pipes/ValidatePasswordPipe';
-import { LocalAuthGuard } from './utils/Guards';
+import { AuthenticatedGuard, LocalAuthGuard } from './utils/Guards';
 
 @Controller(ROUTES.AUTH)
 export class AuthController {
@@ -36,7 +39,15 @@ export class AuthController {
   }
 
   @Get('status')
+  @UseGuards(AuthenticatedGuard)
   async getAuthStatus(@AuthUser() user: User) {
     return user;
+  }
+
+  @Post('logout')
+  @UseGuards(AuthenticatedGuard)
+  async logout(@Req() req: Request, @Res() res: Response) {
+    req.logout();
+    res.send(200);
   }
 }

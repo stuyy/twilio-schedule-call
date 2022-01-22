@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SchedulerModule } from '../scheduler/scheduler.module';
 import { TwilioModule } from '../twilio/twilio.module';
 import { Call } from '../typeorm/entities/Call';
 import { SERVICES } from '../utils/constants';
@@ -7,7 +8,7 @@ import { CallsController } from './calls.controller';
 import { CallsService } from './calls.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Call]), TwilioModule],
+  imports: [TypeOrmModule.forFeature([Call]), TwilioModule, SchedulerModule],
   controllers: [CallsController],
   providers: [
     {

@@ -20,6 +20,7 @@ import { CronJob } from 'cron';
 import { AuthenticatedGuard } from '../auth/utils/Guards';
 import { AuthUser } from '../utils/decorators';
 import { User } from '../typeorm/entities/User';
+import { ISchedulerService } from '../scheduler/scheduler.interface';
 
 @UseGuards(AuthenticatedGuard)
 @Controller('calls')
@@ -29,6 +30,8 @@ export class CallsController {
     @Inject(SERVICES.TWILIO_SERVICE)
     private readonly twilioService: ITwilioService,
     private schedulerRegistry: SchedulerRegistry,
+    @Inject(SERVICES.SCHEDULER)
+    private readonly schedulerService: ISchedulerService,
   ) {}
 
   @Get()
@@ -47,20 +50,11 @@ export class CallsController {
     @AuthUser() user: User,
     @Body() scheduleCallDto: ScheduleCallDto,
   ) {
-    console.log(scheduleCallDto);
     const call = await this.callsService.scheduleCall(user, scheduleCallDto);
-    const job = new CronJob(new Date(call.scheduledDate), async () =>
-      this.callsService
-        .startCall(call)
-        .then((call) => {
-          console.log(call);
-          console.log(`Call Successful`);
-        })
-        .catch((err) => console.log(err)),
+    const job = new CronJob(new Date(call.scheduledDate), () =>
+      this.callsService.jobScheduleCallback(call),
     );
-    this.schedulerRegistry.addCronJob(call.id.toString(), job);
-    console.log(this.schedulerRegistry.getCronJobs());
-    job.start();
+    this.schedulerService.scheduleCronJob(call.id.toString(), job);
   }
 
   @Post('start-call')

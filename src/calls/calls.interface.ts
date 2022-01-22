@@ -9,4 +9,5 @@ export interface ICallsService {
   getCalls(userId: number): Promise<Call[]>;
   updateCall();
   cancelCall();
+  jobScheduleCallback(call: Call);
 }
