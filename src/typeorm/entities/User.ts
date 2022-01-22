@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Call } from './Call';
 
 @Entity({ name: 'users' })
 export class User {
@@ -24,4 +25,7 @@ export class User {
 
   @Column({ default: false })
   verified: boolean;
+
+  @OneToMany(() => Call, (call) => call.user)
+  calls: Call[];
 }

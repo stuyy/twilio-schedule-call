@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 import { ITwilioService } from '../twilio/twilio.inteface';
 import { Call } from '../typeorm/entities/Call';
+import { User } from '../typeorm/entities/User';
 import { SERVICES } from '../utils/constants';
 import { ScheduleCallDto } from './calls.dto';
 import { ICallsService } from './calls.interface';
@@ -15,13 +16,20 @@ export class CallsService implements ICallsService {
     private readonly twilioService: ITwilioService,
   ) {}
 
-  scheduleCall(scheduleCallDto: ScheduleCallDto) {
-    const call = this.callRepository.create(scheduleCallDto);
+  scheduleCall(user: User, scheduleCallDto: ScheduleCallDto) {
+    const call = this.callRepository.create({ ...scheduleCallDto, user });
     return this.callRepository.save(call);
   }
 
-  getCall() {
-    throw new Error('Method not implemented.');
+  getCalls(id: number) {
+    return this.callRepository.find({
+      where: {
+        user: {
+          id,
+        },
+        scheduledDate: MoreThanOrEqual(new Date()),
+      },
+    });
   }
   updateCall() {
     throw new Error('Method not implemented.');

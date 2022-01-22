@@ -18,6 +18,8 @@ import { ICallsService } from './calls.interface';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { AuthenticatedGuard } from '../auth/utils/Guards';
+import { AuthUser } from '../utils/decorators';
+import { User } from '../typeorm/entities/User';
 
 @UseGuards(AuthenticatedGuard)
 @Controller('calls')
@@ -30,14 +32,23 @@ export class CallsController {
   ) {}
 
   @Get()
-  getCalls() {
-    return this.callsService.getCall();
+  async getCalls(@AuthUser() user: User) {
+    const calls = await this.callsService.getCalls(user.id);
+    const scheduledCalls = this.schedulerRegistry.getCronJobs();
+    const activeCalls = calls.filter((call) =>
+      scheduledCalls.get(call.id.toString()),
+    );
+    return activeCalls;
   }
 
   @Post()
   @UsePipes(ValidationPipe)
-  async scheduleCall(@Body() scheduleCallDto: ScheduleCallDto) {
-    const call = await this.callsService.scheduleCall(scheduleCallDto);
+  async scheduleCall(
+    @AuthUser() user: User,
+    @Body() scheduleCallDto: ScheduleCallDto,
+  ) {
+    console.log(scheduleCallDto);
+    const call = await this.callsService.scheduleCall(user, scheduleCallDto);
     const job = new CronJob(new Date(call.scheduledDate), async () =>
       this.callsService
         .startCall(call)
