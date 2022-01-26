@@ -10,6 +10,8 @@ import { UserModule } from './user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { VerifyModule } from './verify/verify.module';
 import { SchedulerModule } from './scheduler/scheduler.module';
+import { SendgridModule } from './sendgrid/sendgrid.module';
+import { JwtServiceModule } from './jwt/jwt.module';
 
 @Module({
   imports: [
@@ -27,6 +29,7 @@ import { SchedulerModule } from './scheduler/scheduler.module';
       entities: entities,
       synchronize: true,
     }),
+    JwtServiceModule,
     CallsModule,
     TwilioModule,
     AuthModule,
@@ -34,6 +37,7 @@ import { SchedulerModule } from './scheduler/scheduler.module';
     PassportModule.register({ session: true }),
     VerifyModule,
     SchedulerModule,
+    SendgridModule,
   ],
   controllers: [],
   providers: [],

@@ -26,6 +26,9 @@ export class User {
   @Column({ default: false })
   verified: boolean;
 
+  @Column({ default: false })
+  emailVerified: boolean;
+
   @OneToMany(() => Call, (call) => call.user)
   calls: Call[];
 }

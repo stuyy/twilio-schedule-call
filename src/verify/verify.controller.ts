@@ -6,17 +6,17 @@ import { ROUTES, SERVICES } from '../utils/constants';
 import { AuthUser } from '../utils/decorators';
 import { MobilePhoneDto } from './dtos/MobilePhoneDto';
 import { VerifyPhoneDto } from './dtos/VerifyPhoneDto';
-import { IVerifyPhoneService } from './verify.interface';
+import { IVerifyService } from './verify.interface';
 
 @UseGuards(AuthenticatedGuard)
 @Controller(ROUTES.VERIFY)
-export class VerifyPhoneController {
+export class VerifyController {
   constructor(
     @Inject(SERVICES.TWILIO_SERVICE)
     private readonly twilioService: ITwilioService,
 
     @Inject(SERVICES.VERIFY)
-    private readonly verifyService: IVerifyPhoneService,
+    private readonly verifyService: IVerifyService,
   ) {}
 
   @Post('')
@@ -33,5 +33,10 @@ export class VerifyPhoneController {
       userId,
       ...verifyPhoneDto,
     });
+  }
+
+  @Post('email')
+  async verifyEmailAddress(@AuthUser() user: User) {
+    await this.verifyService.verifyEmailAddress(user);
   }
 }
