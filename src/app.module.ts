@@ -12,6 +12,7 @@ import { VerifyModule } from './verify/verify.module';
 import { SchedulerModule } from './scheduler/scheduler.module';
 import { SendgridModule } from './sendgrid/sendgrid.module';
 import { JwtServiceModule } from './jwt/jwt.module';
+import { SmsModule } from './sms/sms.module';
 
 const envFilePath =
   process.env.ENVIRONMENT === 'DEVELOPMENT'
@@ -47,6 +48,7 @@ console.log(
     VerifyModule,
     SchedulerModule,
     SendgridModule,
+    SmsModule,
   ],
   controllers: [],
   providers: [],
