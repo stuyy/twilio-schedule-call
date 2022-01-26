@@ -80,7 +80,13 @@ export class CallsService implements ICallsService, OnModuleInit {
         'Call Cancellation Failed. That call does not exist for you.',
         HttpStatus.BAD_REQUEST,
       );
-    else this.scheduleService.cancelCrobJob(callId);
+    else {
+      await this.callRepository.update(
+        { id: parseInt(callId) },
+        { status: 'cancelled' },
+      );
+      return this.scheduleService.cancelCrobJob(callId);
+    }
   }
   startCall(call: Call) {
     return this.twilioService.startCall(call);
