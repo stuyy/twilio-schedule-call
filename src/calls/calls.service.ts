@@ -1,4 +1,10 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  OnModuleInit,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CronJob } from 'cron';
 import { MoreThan, MoreThanOrEqual, Repository } from 'typeorm';
@@ -66,8 +72,15 @@ export class CallsService implements ICallsService, OnModuleInit {
   updateCall() {
     throw new Error('Method not implemented.');
   }
-  cancelCall(userId: number, callId: string) {
-    this.scheduleService.cancelCrobJob(callId);
+  async cancelCall(userId: number, callId: string) {
+    const jobs = await this.scheduleService.getCronJobsByUser(userId);
+    const validCall = jobs.some((call) => call.id.toString() === callId);
+    if (!validCall)
+      throw new HttpException(
+        'Call Cancellation Failed. That call does not exist for you.',
+        HttpStatus.BAD_REQUEST,
+      );
+    else this.scheduleService.cancelCrobJob(callId);
   }
   startCall(call: Call) {
     return this.twilioService.startCall(call);
