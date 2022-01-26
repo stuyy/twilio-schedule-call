@@ -21,9 +21,7 @@ export class SchedulerService implements ISchedulerService {
 
   cancelCrobJob(jobId: string) {
     console.log(`Deleting Cron Job #${jobId}`);
-    console.log(this.getCronJobs());
     this.scheduler.deleteCronJob(jobId);
-    console.log(this.getCronJobs());
   }
 
   getCronJob(id: string) {

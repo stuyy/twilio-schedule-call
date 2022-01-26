@@ -73,5 +73,6 @@ export class CallsController {
   cancelCall(@AuthUser() user: User, @Param('callId') callId: string) {
     const { id } = user;
     this.callsService.cancelCall(id, callId);
+    return this.schedulerService.getCronJobsByUser(id);
   }
 }
