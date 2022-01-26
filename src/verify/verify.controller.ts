@@ -1,4 +1,12 @@
-import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthenticatedGuard } from '../auth/utils/Guards';
 import { ITwilioService } from '../twilio/twilio.inteface';
 import { User } from '../typeorm/entities/User';
@@ -38,5 +46,13 @@ export class VerifyController {
   @Post('email')
   async verifyEmailAddress(@AuthUser() user: User) {
     await this.verifyService.verifyEmailAddress(user);
+  }
+
+  @Get('email/:token')
+  async verifyEmailToken(
+    @AuthUser() user: User,
+    @Param('token') token: string,
+  ) {
+    console.log(token);
   }
 }

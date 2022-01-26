@@ -50,6 +50,7 @@ export class CallsController {
     @AuthUser() user: User,
     @Body() scheduleCallDto: ScheduleCallDto,
   ) {
+    console.log(scheduleCallDto.scheduledDate);
     const call = await this.callsService.scheduleCall(user, scheduleCallDto);
     const job = new CronJob(new Date(call.scheduledDate), () =>
       this.callsService.jobScheduleCallback(call),

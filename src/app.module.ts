@@ -13,10 +13,19 @@ import { SchedulerModule } from './scheduler/scheduler.module';
 import { SendgridModule } from './sendgrid/sendgrid.module';
 import { JwtServiceModule } from './jwt/jwt.module';
 
+const envFilePath =
+  process.env.ENVIRONMENT === 'DEVELOPMENT'
+    ? '.env.development'
+    : '.env.production';
+
+console.log(
+  `Environment: ${process.env.ENVIRONMENT}. Using ${envFilePath} path`,
+);
+
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env.development',
+      envFilePath,
     }),
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({

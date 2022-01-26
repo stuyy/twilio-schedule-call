@@ -10,6 +10,7 @@ export class TwilioService implements ITwilioService {
     @Inject(SERVICES.TWILIO_CLIENT) private readonly twilioClient: Twilio,
   ) {}
   startCall(call: Call) {
+    const callHandlerURL = process.env.CALL_HANDLER_URL;
     return this.twilioClient.calls.create({
       to: call.caller,
       from: process.env.TWILIO_PHONE_NUMBER,
@@ -17,7 +18,7 @@ export class TwilioService implements ITwilioService {
         <Response>
           <Pause length="2" />
           <Say>${call.description}</Say>
-          <Gather action="https://ansonfoong.ngrok.io/api/calls/start-call?recipient=${call.recipient}" method="POST">
+          <Gather action="${callHandlerURL}?recipient=${call.recipient}" method="POST">
             <Say>Please enter 1 to call, or 2 to end.</Say>
           </Gather>
         </Response>`,

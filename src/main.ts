@@ -30,6 +30,8 @@ async function bootstrap() {
   app.use(passport.session());
   try {
     await app.listen(PORT, () => console.log(`Running App on Port ${PORT}`));
+    console.log(`Running in ${process.env.ENVIRONMENT} mode.`);
+    console.log(`Twilio Call Handler URL: ${process.env.CALL_HANDLER_URL}`);
   } catch (err) {
     console.log(err);
   }

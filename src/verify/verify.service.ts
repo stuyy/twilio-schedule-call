@@ -42,4 +42,5 @@ export class VerifyService implements IVerifyService {
       await this.sendgridService.sendVerificationEmail(user, jwtToken);
     }
   }
+  verifyEmailToken(token: string) {}
 }

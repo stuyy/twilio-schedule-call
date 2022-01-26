@@ -7,7 +7,7 @@ export class TokenService implements TokenGenerator {
   constructor(private readonly jwtService: JwtService) {}
 
   generateJwt(payload: string | object | Buffer) {
-    return this.jwtService.sign(payload);
+    return this.jwtService.sign(payload, { expiresIn: '30m' });
   }
 
   verifyJwt(token: string) {
