@@ -21,6 +21,6 @@ export class SendgridService implements EmailService {
         html: `<p>Hey ${user.firstName} ${user.lastName}! We're sending you a link you can use to verify your email address. Click <a href="${emailVerifyURL}">here</a> to verify your email.</p>`,
       })
       .then((v) => console.log(v))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err.response));
   }
 }
