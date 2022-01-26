@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CronJob } from 'cron';
+import { CronJob, CronTime } from 'cron';
 import { MoreThanOrEqual, Repository } from 'typeorm';
 import { Call } from '../typeorm/entities/Call';
 import { ISchedulerService } from './scheduler.interface';
@@ -32,6 +32,17 @@ export class SchedulerService implements ISchedulerService {
     return this.scheduler.getCronJobs();
   }
 
+  startCronJob(id: number) {
+    const time = new CronTime(new Date(new Date().getTime() + 1000));
+    const job = this.scheduler.getCronJob(id.toString());
+    console.log(this.scheduler.getCronJobs());
+    console.log('Starting Job Now...');
+    job.setTime(time);
+    job.start();
+    console.log(this.scheduler.getCronJobs());
+    return this.callRepository.update({ id }, { status: 'completed' });
+  }
+
   async getCronJobsByUser(id: number) {
     const calls = await this.getUserCalls(id);
     const scheduledCalls = this.getCronJobs();
@@ -45,6 +56,7 @@ export class SchedulerService implements ISchedulerService {
           id,
         },
         scheduledDate: MoreThanOrEqual(new Date()),
+        status: 'scheduled',
       },
     });
   }

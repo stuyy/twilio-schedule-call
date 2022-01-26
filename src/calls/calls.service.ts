@@ -91,4 +91,19 @@ export class CallsService implements ICallsService, OnModuleInit {
   startCall(call: Call) {
     return this.twilioService.startCall(call);
   }
+  async startScheduledCall(userId: number, callId: string) {
+    const jobs = await this.scheduleService.getCronJobsByUser(userId);
+    const call = jobs.find((c) => c.id.toString() === callId);
+    console.log(call);
+    if (!call)
+      throw new HttpException(
+        'Call Start Failed. That call does not exist for you.',
+        HttpStatus.BAD_REQUEST,
+      );
+    else {
+      console.log('Found Call. Starting Job...');
+      console.log(call.id);
+      this.scheduleService.startCronJob(call.id);
+    }
+  }
 }

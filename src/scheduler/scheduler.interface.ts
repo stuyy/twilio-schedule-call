@@ -7,4 +7,5 @@ export interface ISchedulerService {
   getCronJobs(): Map<string, CronJob>;
   cancelCrobJob(id: string): void;
   getCronJobsByUser(id: number): Promise<Call[]>;
+  startCronJob(id: number);
 }

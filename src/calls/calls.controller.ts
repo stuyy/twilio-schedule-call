@@ -51,8 +51,8 @@ export class CallsController {
     this.schedulerService.scheduleCronJob(call.id.toString(), job);
   }
 
-  @Post('handle-call')
-  startCall(@Body() body, @Query('recipient') recipient: string) {
+  @Post('handle')
+  handleCall(@Body() body, @Query('recipient') recipient: string) {
     if (!body.Digits)
       throw new HttpException('Invalid Request', HttpStatus.BAD_REQUEST);
     return body.Digits == 1
@@ -76,5 +76,15 @@ export class CallsController {
     const { id } = user;
     await this.callsService.cancelCall(id, callId);
     return this.schedulerService.getCronJobsByUser(id);
+  }
+
+  @Put('start/:callId')
+  @UseGuards(AuthenticatedGuard)
+  async startScheduledCall(
+    @AuthUser() user: User,
+    @Param('callId') callId: string,
+  ) {
+    const { id } = user;
+    await this.callsService.startScheduledCall(id, callId);
   }
 }

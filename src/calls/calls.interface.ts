@@ -10,4 +10,5 @@ export interface ICallsService {
   updateCall();
   cancelCall(userId: number, callId: string);
   jobScheduleCallback(call: Call);
+  startScheduledCall(userId: number, callId: string);
 }
