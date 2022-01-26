@@ -23,7 +23,7 @@ export class CallsService implements ICallsService, OnModuleInit {
   async onModuleInit() {
     console.log('Initializing Scheduler Service');
     const calls = await this.callRepository.find({
-      where: { scheduledDate: MoreThan(new Date()) },
+      where: { scheduledDate: MoreThan(new Date()), status: 'scheduled' },
     });
     calls.forEach((call) => {
       console.log(`Scheduling Call ${call.id}`);
@@ -66,8 +66,8 @@ export class CallsService implements ICallsService, OnModuleInit {
   updateCall() {
     throw new Error('Method not implemented.');
   }
-  cancelCall() {
-    throw new Error('Method not implemented.');
+  cancelCall(userId: number, callId: string) {
+    this.scheduleService.cancelCrobJob(callId);
   }
   startCall(call: Call) {
     return this.twilioService.startCall(call);

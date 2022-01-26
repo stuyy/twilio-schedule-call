@@ -8,6 +8,6 @@ export interface ICallsService {
   startCall(call: Call): Promise<CallInstance>;
   getCalls(userId: number): Promise<Call[]>;
   updateCall();
-  cancelCall();
+  cancelCall(userId: number, callId: string);
   jobScheduleCallback(call: Call);
 }

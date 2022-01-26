@@ -5,17 +5,17 @@ import {
   HttpException,
   HttpStatus,
   Inject,
+  Param,
   Post,
+  Put,
   Query,
   UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ITwilioService } from '../twilio/twilio.inteface';
 import { SERVICES } from '../utils/constants';
 import { ScheduleCallDto } from './calls.dto';
 import { ICallsService } from './calls.interface';
-import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { AuthenticatedGuard } from '../auth/utils/Guards';
 import { AuthUser } from '../utils/decorators';
@@ -27,21 +27,13 @@ import { ISchedulerService } from '../scheduler/scheduler.interface';
 export class CallsController {
   constructor(
     @Inject(SERVICES.CALLS) private readonly callsService: ICallsService,
-    @Inject(SERVICES.TWILIO_SERVICE)
-    private readonly twilioService: ITwilioService,
-    private schedulerRegistry: SchedulerRegistry,
     @Inject(SERVICES.SCHEDULER)
     private readonly schedulerService: ISchedulerService,
   ) {}
 
   @Get()
   async getCalls(@AuthUser() user: User) {
-    const calls = await this.callsService.getCalls(user.id);
-    const scheduledCalls = this.schedulerRegistry.getCronJobs();
-    const activeCalls = calls.filter((call) =>
-      scheduledCalls.get(call.id.toString()),
-    );
-    return activeCalls;
+    return this.schedulerService.getCronJobsByUser(user.id);
   }
 
   @Post()
@@ -75,5 +67,11 @@ export class CallsController {
         <Hangup />
       </Response>
       `;
+  }
+
+  @Put('cancel/:callId')
+  cancelCall(@AuthUser() user: User, @Param('callId') callId: string) {
+    const { id } = user;
+    this.callsService.cancelCall(id, callId);
   }
 }

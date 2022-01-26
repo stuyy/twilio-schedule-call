@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CronJob } from 'cron';
-import { Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 import { Call } from '../typeorm/entities/Call';
 import { ISchedulerService } from './scheduler.interface';
 
@@ -19,7 +19,35 @@ export class SchedulerService implements ISchedulerService {
     console.log(`Job #${jobId} started.`);
   }
 
+  cancelCrobJob(jobId: string) {
+    console.log(`Deleting Cron Job #${jobId}`);
+    console.log(this.getCronJobs());
+    this.scheduler.deleteCronJob(jobId);
+    console.log(this.getCronJobs());
+  }
+
   getCronJob(id: string) {
     throw new Error('Method not implemented.');
+  }
+
+  getCronJobs() {
+    return this.scheduler.getCronJobs();
+  }
+
+  async getCronJobsByUser(id: number) {
+    const calls = await this.getUserCalls(id);
+    const scheduledCalls = this.getCronJobs();
+    return calls.filter((call) => scheduledCalls.get(call.id.toString()));
+  }
+
+  private getUserCalls(id: number) {
+    return this.callRepository.find({
+      where: {
+        user: {
+          id,
+        },
+        scheduledDate: MoreThanOrEqual(new Date()),
+      },
+    });
   }
 }
