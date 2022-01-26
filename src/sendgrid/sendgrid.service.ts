@@ -12,7 +12,7 @@ export class SendgridService implements EmailService {
   ) {}
 
   sendVerificationEmail(user: User, token: string) {
-    const emailVerifyURL = `http://localhost:6778/api/verify/email/${token}`;
+    const emailVerifyURL = `${process.env.EMAIL_VERIFY_URL}/${token}`;
     return this.sendgridClient
       .send({
         to: user.email,

@@ -10,7 +10,6 @@ import { IVerifyService } from './verify.interface';
 
 @Injectable()
 export class VerifyService implements IVerifyService {
-  private tokens: Map<number, string> = new Map();
   constructor(
     @Inject(SERVICES.TWILIO_SERVICE)
     private readonly twilioService: ITwilioService,
@@ -32,15 +31,30 @@ export class VerifyService implements IVerifyService {
   }
 
   async verifyEmailAddress(user: User) {
-    const existingToken = this.tokens.get(user.id);
-    if (existingToken) {
-      console.log(this.tokenService.verifyJwt(existingToken));
-    } else {
-      const jwtToken = this.tokenService.generateJwt(user);
-      console.log(`JWT: ${jwtToken}`);
-      this.tokens.set(user.id, jwtToken);
-      await this.sendgridService.sendVerificationEmail(user, jwtToken);
-    }
+    if (user.emailVerified)
+      throw new HttpException(
+        'Email address already verified',
+        HttpStatus.BAD_REQUEST,
+      );
+    console.log(user);
+    const jwtToken = this.tokenService.generateJwt(user);
+    await this.sendgridService.sendVerificationEmail(user, jwtToken);
   }
-  verifyEmailToken(token: string) {}
+
+  async verifyEmailToken(userId: number, token: string) {
+    const userDB = await this.userService.findUser({ id: userId });
+    if (!userDB)
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    if (userDB.emailVerified)
+      throw new HttpException(
+        'Email address already verified',
+        HttpStatus.BAD_REQUEST,
+      );
+    const verifiedUser = this.tokenService.verifyJwt(token);
+    if (verifiedUser.id !== userId)
+      throw new HttpException('Invalid JWT', HttpStatus.BAD_REQUEST);
+    return this.userService.updateUser(verifiedUser.id, {
+      emailVerified: true,
+    });
+  }
 }

@@ -18,6 +18,7 @@ export type UpdateUserParams = Partial<{
   password: string;
   mobile: string;
   verified: boolean;
+  emailVerified: boolean;
 }>;
 
 export type VerifyCodeResponse = {

@@ -5,8 +5,10 @@ import {
   Inject,
   Param,
   Post,
+  Res,
   UseGuards,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthenticatedGuard } from '../auth/utils/Guards';
 import { ITwilioService } from '../twilio/twilio.inteface';
 import { User } from '../typeorm/entities/User';
@@ -52,7 +54,11 @@ export class VerifyController {
   async verifyEmailToken(
     @AuthUser() user: User,
     @Param('token') token: string,
+    @Res() res: Response,
   ) {
-    console.log(token);
+    await this.verifyService.verifyEmailToken(user.id, token);
+    res
+      .cookie('showEmailVerified', true)
+      .redirect(process.env.EMAIL_VERIFY_REDIRECT_URL);
   }
 }

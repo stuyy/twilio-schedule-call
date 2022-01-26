@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '../typeorm/entities/User';
 import { TokenGenerator } from './jwt.interface';
 
 @Injectable()
@@ -11,6 +12,6 @@ export class TokenService implements TokenGenerator {
   }
 
   verifyJwt(token: string) {
-    return this.jwtService.verify(token);
+    return this.jwtService.verify<User>(token);
   }
 }
