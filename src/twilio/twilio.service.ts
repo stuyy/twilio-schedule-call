@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Twilio } from 'twilio';
 import { Call } from '../typeorm/entities/Call';
 import { SERVICES } from '../utils/constants';
+import { CreateSMSDetails } from '../utils/types';
 import { ITwilioService } from './twilio.inteface';
 
 @Injectable()
@@ -36,5 +37,10 @@ export class TwilioService implements ITwilioService {
     return this.twilioClient.verify
       .services(process.env.TWILIO_SERVICE_SID)
       .verificationChecks.create({ to, code });
+  }
+
+  sendSMS(smsDetails: CreateSMSDetails) {
+    const { to, from, body } = smsDetails;
+    return this.twilioClient.messages.create({ to, from, body });
   }
 }

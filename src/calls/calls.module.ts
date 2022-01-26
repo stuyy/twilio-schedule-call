@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SchedulerModule } from '../scheduler/scheduler.module';
+import { SMSMessengerService } from '../sms/sms.service';
 import { TwilioModule } from '../twilio/twilio.module';
 import { Call } from '../typeorm/entities/Call';
 import { SERVICES } from '../utils/constants';
@@ -14,6 +15,10 @@ import { CallsService } from './calls.service';
     {
       provide: SERVICES.CALLS,
       useClass: CallsService,
+    },
+    {
+      provide: SERVICES.SMS_SERVICE,
+      useClass: SMSMessengerService,
     },
   ],
   exports: [

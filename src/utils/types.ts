@@ -45,3 +45,9 @@ export type ScheduledCallStatus =
   | 'completed'
   | 'failed'
   | 'cancelled';
+
+export type CreateSMSDetails = {
+  to: string;
+  from: string;
+  body: string;
+};

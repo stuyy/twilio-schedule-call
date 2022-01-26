@@ -21,6 +21,7 @@ import { AuthenticatedGuard } from '../auth/utils/Guards';
 import { AuthUser } from '../utils/decorators';
 import { User } from '../typeorm/entities/User';
 import { ISchedulerService } from '../scheduler/scheduler.interface';
+import { ISMSMessengerService } from '../sms/sms.interface';
 
 @Controller('calls')
 export class CallsController {
@@ -28,6 +29,8 @@ export class CallsController {
     @Inject(SERVICES.CALLS) private readonly callsService: ICallsService,
     @Inject(SERVICES.SCHEDULER)
     private readonly schedulerService: ISchedulerService,
+    @Inject(SERVICES.SMS_SERVICE)
+    private readonly smsService: ISMSMessengerService,
   ) {}
 
   @Get()
@@ -75,6 +78,11 @@ export class CallsController {
   async cancelCall(@AuthUser() user: User, @Param('callId') callId: string) {
     const { id } = user;
     await this.callsService.cancelCall(id, callId);
+    await this.smsService.sendSMS({
+      to: user.mobile,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      body: `Your scheduled call was cancelled.`,
+    });
     return this.schedulerService.getCronJobsByUser(id);
   }
 
