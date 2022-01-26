@@ -22,7 +22,6 @@ import { AuthUser } from '../utils/decorators';
 import { User } from '../typeorm/entities/User';
 import { ISchedulerService } from '../scheduler/scheduler.interface';
 
-@UseGuards(AuthenticatedGuard)
 @Controller('calls')
 export class CallsController {
   constructor(
@@ -32,12 +31,14 @@ export class CallsController {
   ) {}
 
   @Get()
+  @UseGuards(AuthenticatedGuard)
   async getCalls(@AuthUser() user: User) {
     return this.schedulerService.getCronJobsByUser(user.id);
   }
 
   @Post()
   @UsePipes(ValidationPipe)
+  @UseGuards(AuthenticatedGuard)
   async scheduleCall(
     @AuthUser() user: User,
     @Body() scheduleCallDto: ScheduleCallDto,
@@ -50,7 +51,7 @@ export class CallsController {
     this.schedulerService.scheduleCronJob(call.id.toString(), job);
   }
 
-  @Post('start-call')
+  @Post('handle-call')
   startCall(@Body() body, @Query('recipient') recipient: string) {
     if (!body.Digits)
       throw new HttpException('Invalid Request', HttpStatus.BAD_REQUEST);
@@ -70,6 +71,7 @@ export class CallsController {
   }
 
   @Put('cancel/:callId')
+  @UseGuards(AuthenticatedGuard)
   async cancelCall(@AuthUser() user: User, @Param('callId') callId: string) {
     const { id } = user;
     await this.callsService.cancelCall(id, callId);
