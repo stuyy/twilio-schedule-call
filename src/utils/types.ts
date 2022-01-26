@@ -39,3 +39,9 @@ export type VerifyPhoneParams = {
   mobile: string;
   code: string;
 };
+
+export type ScheduledCallStatus =
+  | 'scheduled'
+  | 'completed'
+  | 'failed'
+  | 'cancelled';

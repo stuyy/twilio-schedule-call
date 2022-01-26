@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { ScheduledCallStatus } from '../../utils/types';
 import { User } from './User';
 
 @Entity({ name: 'calls' })
@@ -19,7 +20,7 @@ export class Call {
   scheduledDate: Date;
 
   @Column({ default: 'scheduled' })
-  status: string;
+  status: ScheduledCallStatus;
 
   @ManyToOne(() => User, (user) => user.calls)
   user: User;

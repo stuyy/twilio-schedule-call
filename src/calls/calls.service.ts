@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CronCommand, CronJob } from 'cron';
+import { CronJob } from 'cron';
 import { MoreThan, MoreThanOrEqual, Repository } from 'typeorm';
 import { ISchedulerService } from '../scheduler/scheduler.interface';
 import { ITwilioService } from '../twilio/twilio.inteface';
@@ -38,7 +38,10 @@ export class CallsService implements ICallsService, OnModuleInit {
     try {
       const callResponse = await this.startCall(call);
       console.log(callResponse);
-      await this.callRepository.update({ id: call.id }, { status: 'complete' });
+      await this.callRepository.update(
+        { id: call.id },
+        { status: 'completed' },
+      );
       console.log('Updating...');
     } catch (err) {
       console.log(err);
